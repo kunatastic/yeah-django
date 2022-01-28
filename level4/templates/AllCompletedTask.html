@@ -14,13 +14,15 @@
           <div class="container mx-auto mx-5 py-10">
             <h1 class="text-3xl text-blue-900">Completed Tasks</h1>
             <br />
+            {% if showCompleted %}
             <ul class="pt-5 list-disc">
-              {{(completed)}} {% if completed %}
-              <li class="pt-3 ml-5">No completed tasks</li>
-              {% else %} {% for task in completed %}
+              {% for task in completed %}
               <li class="pt-3 ml-5">{{ task }}</li>
-              {% endfor %} {% endif %}
+              {% endfor %}
             </ul>
+            {% else %}
+            <h1 class="pt-3 text-xl ml-5">No completed tasks</h1>
+            {% endif %}
           </div>
         </div>
       </div>

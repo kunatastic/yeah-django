@@ -16,11 +16,11 @@ def view_completed_task(request,index):
 
 # view all the completed tasks
 def view_all_completed_task(request):
-    return render(request, "AllCompletedTask.html", {"completed": completed})
+    return render(request, "AllCompletedTask.html", {"completed": completed, "showCompleted": len(completed)!=0 })
 
 # view both completed and pending tasks
 def view_all_task(request):
-    return render(request, "AllTask.html", {"pending": pending, "completed": completed})
+    return render(request, "AllTask.html", {"pending": pending, "showPending": len(pending)!=0, "completed": completed, "showCompleted": len(completed)!=0})
 
 # add a new task & view pending tasks
 def view_task(request):
