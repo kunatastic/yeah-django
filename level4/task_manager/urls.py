@@ -24,7 +24,7 @@ def view_all_task(request):
 
 # add a new task & view pending tasks
 def view_task(request):
-    return render(request, "AddTask.html", {"pending": pending})
+    return render(request, "AddTask.html", {"pending": pending, "showPending": len(pending)!=0})
 
 # add a new task
 def view_add_task(request):
