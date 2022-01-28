@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Tasks</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div class="bg-gradient-to-r from-blue-400 to-blue-900 h-screen">
+      <div class="flex justify-evenly items-center h-full">
+        <div class="bg-white w-2/5 drop-shadow-lg rounded">
+          <div class="container mx-auto mx-5 py-10">
+            <h1 class="text-3xl text-blue-900">Pending Tasks</h1>
+            <br />
+            <ul class="pt-5 list-disc">
+              {% for task in pending %}
+              <li class="pt-3 ml-5">
+                {{ task }}
+
+                <a
+                  class="underline px-2 text-green-500 hover:text-green-700"
+                  href="/complete_task/{{forloop.counter}}/"
+                >
+                  Complete
+                </a>
+                <a
+                  class="underline px-2 text-red-500 hover:text-red-700"
+                  href="/delete-task/{{forloop.counter}}/"
+                >
+                  Delete
+                </a>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+        <div class="bg-white w-2/5 drop-shadow-lg rounded">
+          <div class="container mx-auto mx-5 py-10">
+            <h1 class="text-3xl text-blue-900">Add a new task</h1>
+            <br />
+            <form action="/add-task/" method="get">
+              <input
+                type="text"
+                name="task"
+                class="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-4/5 rounded-md sm:text-sm focus:ring-1"
+                placeholder="Add a task"
+              />
+              <br />
+              <button
+                type="submit"
+                class="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 px-7 py-2 rounded-full"
+              >
+                Save changes
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
