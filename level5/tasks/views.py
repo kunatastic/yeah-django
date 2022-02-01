@@ -1,6 +1,7 @@
 # Add your Views Here
 
 
+from re import search
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
@@ -25,7 +26,10 @@ def view_all_task(request):
 
 # add a new task & view pending tasks
 def view_task(request):
+    search_value = request.GET.get("search") 
     pending = Task.objects.filter(deleted=False).filter(completed=False)
+    if search_value:
+        pending = pending.filter(title__icontains=search_value)
     return render(request, "AddTask.html", {"pending": pending, "showPending": len(pending)!=0})
 
 # add a new task
