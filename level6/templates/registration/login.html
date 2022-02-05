@@ -1,0 +1,42 @@
+{% extends 'template.html' %} {% block title %} Login | Login to the account {% endblock title%}
+{%block header %} Task Manager {% endblock header%} {% block content %}
+<h3 class="my-5 text-2xl font-extrabold text-gray-700">Login</h3>
+<form class="mt-8 space-y-6" action="" method="POST">
+  {% csrf_token %} {% comment %}
+  <div>
+    <h2>Username</h2>
+    <input
+      type="text"
+      name="username"
+      placeholder="Username"
+      class="rounded-md relative block w-full px-3 py-2 my-2 bg-gray-200"
+    />
+  </div>
+  <div>
+    <h2>Password</h2>
+    <input
+      type="password"
+      name="password"
+      placeholder="Password"
+      class="rounded-md relative block w-full px-3 py-2 my-2 bg-gray-200"
+    />
+  </div>
+  {% endcomment %} {% for field in form %}
+  <div>
+    <h2>{{ field.label }}</h2>
+    {{ field.errors }} {{field}} {% if field.help_text %}
+    <p class="help">{{ field.help_text|safe }}</p>
+    {% endif %}
+  </div>
+  {% endfor %}
+
+  <div>
+    <button
+      type="submit"
+      class="group relative w-full flex justify-center py-3 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+    >
+      Sign in
+    </button>
+  </div>
+</form>
+{% endblock content %}
