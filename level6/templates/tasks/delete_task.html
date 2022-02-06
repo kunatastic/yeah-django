@@ -1,6 +1,9 @@
-{% extends 'template.html' %} {% block title %} Delete Tasks | Confirm you want to delete tasks
-{%endblock title%} {%block header %} Confirm delete {% endblock header%} {% block content %}
-
+{% extends 'template.html' %}
+<!--  -->
+{% block title %} Delete Tasks | Confirm you want to delete tasks {%endblock title%}
+<!--  -->
+{% block content %}
+<h2 class="my-16 text-center text-5xl font-extrabold text-gray-900">Confirm Delete</h2>
 <form method="post">
   {% csrf_token %}
   <div class="p-5 mb-5 bg-gray-100">

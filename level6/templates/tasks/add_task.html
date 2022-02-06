@@ -1,6 +1,9 @@
-{% extends 'template.html' %} {% block title %}Add Tasks | Add a new tasks {% endblock title%}
-{%block header %}Add Todo {% endblock header%} {% block content %}
-
+{% extends 'template.html' %}
+<!--  -->
+{% block title %}Add Tasks | Add a new tasks {% endblock title%}
+<!--  -->
+{% block content %}
+<h2 class="my-16 text-center text-5xl font-extrabold text-gray-900">Add Todo</h2>
 <form action="" method="post">
   {{form.as_p}} {% csrf_token %}
 
