@@ -1,7 +1,13 @@
-{% extends 'template.html' %} {%block header%} Hi {{request.user}}
+{% extends 'template.html' %}
 <!--  -->
-{% endblock header%} {%block content %}
-<a href="/user/logout" class="text-red-500">Logout</a>
+{%block content %}
+
+<div class="flex justify-between mt-20 px-5">
+  <h2 class="text-5xl font-extrabold text-gray-900">Hi {{request.user}}</h2>
+  <a href="/user/logout" class="my-4 text-md text-red-500">Logout</a>
+</div>
+
+<p>{{sub_total_count}} of {{total_count}} tasks are yet to complete</p>
 
 {%block links%} {%endblock links%}
 

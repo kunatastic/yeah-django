@@ -11,12 +11,7 @@
   </head>
   <body>
     <div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div class="max-w-md w-full space-y-8">
-        <h2 class="my-16 text-center text-5xl font-extrabold text-gray-900">
-          {% block header %} {% endblock header %}
-        </h2>
-        {% block content %} {% endblock content%}
-      </div>
+      <div class="max-w-md w-full space-y-8">{% block content %} {% endblock content%}</div>
     </div>
   </body>
 </html>

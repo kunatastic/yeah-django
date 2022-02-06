@@ -30,6 +30,16 @@ class GenericLoginFormView(AuthenticationForm):
         for visible in self.visible_fields():
             visible.field.widget.attrs["class"] = "rounded-md relative block w-full px-3 py-2 my-2 bg-gray-100"
 
+# CUSTOM CONTEXT UTILITY 
+class GenericContextUtility(ListView):
+    def get_context_data(self, **kwargs):
+        context = super(GenericContextUtility, self).get_context_data(**kwargs)
+        context.update({
+            'sub_total_count': Task.objects.filter(deleted = False, user = self.request.user, completed = False).count(),
+            'total_count': Task.objects.filter(deleted = False, user = self.request.user).count(),
+        })
+        return context
+
 # SIGNIN USER
 '''
     @url: /user/login/
@@ -144,7 +154,7 @@ class CompletedTaskView(LoginRequiredMixin,ListView):
     @url: /all-tasks/
     public: False
 '''
-class AllTaskView(LoginRequiredMixin,ListView):
+class AllTaskView(LoginRequiredMixin,GenericContextUtility):
     template_name = 'home/all_tasks.html'
     context_object_name = 'tasks'
     def get_queryset(self):
@@ -155,7 +165,7 @@ class AllTaskView(LoginRequiredMixin,ListView):
     @url: /completed-tasks/
     public: False
 '''
-class CompletedTaskView(LoginRequiredMixin,ListView):
+class CompletedTaskView(LoginRequiredMixin,GenericContextUtility):
     template_name = 'home/completed_tasks.html'
     context_object_name = 'tasks'
     def get_queryset(self):
@@ -165,8 +175,10 @@ class CompletedTaskView(LoginRequiredMixin,ListView):
 '''
     @url: /tasks/
     public: False
+
+    https://stackoverflow.com/questions/31133963/multiple-models-generic-listview-to-template
 '''
-class PendingTaskView(LoginRequiredMixin,ListView):
+class PendingTaskView(LoginRequiredMixin,GenericContextUtility):
     template_name = 'home/pending_tasks.html'
     context_object_name = 'tasks'
     def get_queryset(self):
