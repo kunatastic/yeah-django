@@ -7,10 +7,14 @@ from tasks.models import Task
 @transaction.atomic
 def cascade_logic(user, priority):
     store = []
+    filtered_tasks = Task.objects.select_for_update().filter(user=user, completed=False, deleted=False)
+
     # Array of continuous tasks with increasing priority by 1
-    while Task.objects.filter(user=user, priority=priority, completed=False, deleted=False).exists():
-        temp_task = Task.objects.select_for_update().filter(user=user, priority=priority, completed=False, deleted=False)[0]
-        temp_task.priority += 1
-        store.append(temp_task)
+    while True:
+        task_w_priority = filtered_tasks.filter(priority=priority)
+        if len(task_w_priority) == 0:
+            break
+        task_w_priority[0].priority += 1
+        store.append(task_w_priority[0])
         priority = priority + 1
     Task.objects.bulk_update(store, ['priority'])  
