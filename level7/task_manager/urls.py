@@ -15,21 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from rest_framework import routers
+from rest_framework.routers import SimpleRouter
 from tasks.apiview import TaskViewSet, HistoryViewSet
 from tasks.views import *
 
 from rest_framework_nested import routers
-router = routers.SimpleRouter()
+router = SimpleRouter()
 
 router.register("api/task", TaskViewSet)
+# router.register("api/history", HistoryViewSet)
 
 task_router = routers.NestedSimpleRouter(router, "api/task", lookup="task")
 task_router.register("history", HistoryViewSet)
-
-# router = routers.SimpleRouter()
-# router.register("api/task", TaskViewSet)
-# router.register("api/history", HistoryViewSet)
 
 urlpatterns = [
 
