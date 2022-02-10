@@ -1,0 +1,35 @@
+{% extends 'template.html' %}
+<!--  -->
+{% block title %} Delete Tasks | Confirm you want to delete tasks {%endblock title%}
+<!--  -->
+{% block content %}
+<h2 class="my-16 text-center text-5xl font-extrabold text-gray-900">Confirm Delete</h2>
+<form method="post">
+  {% csrf_token %}
+  <div class="p-5 mb-5 bg-gray-100">
+    <h3 class="mt-2 text-xl font-extrabold text-gray-700">Title</h3>
+    <p class="text-gray-700">{{task.title}}</p>
+    <h3 class="mt-2 text-xl font-extrabold text-gray-700">Description</h3>
+    <p class="text-gray-700">{{task.description}}</p>
+    <h3 class="mt-2 text-xl font-extrabold text-gray-700">Priority</h3>
+    <p class="text-gray-700">{{task.priority}}</p>
+    <h3 class="mt-2 text-xl font-extrabold text-gray-700">Completed</h3>
+    <p class="text-gray-700">{{task.completed}}</p>
+  </div>
+
+  <div class="w-full flex justify-evenly">
+    <a
+      href="/tasks/"
+      class="bg-red-500 hover:bg-red-600 active:bg-red-700 focus:outline-none focus:ring focus:ring-red-300 px-7 py-2 rounded-full"
+    >
+      Cancel
+    </a>
+    <button
+      type="submit"
+      class="bg-green-500 hover:bg-green-600 active:bg-green-700 focus:outline-none focus:ring focus:ring-green-300 px-7 py-2 rounded-full"
+    >
+      Confirm
+    </button>
+  </div>
+</form>
+{% endblock content %}

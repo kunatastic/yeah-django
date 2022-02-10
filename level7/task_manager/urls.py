@@ -15,8 +15,42 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from rest_framework import routers
+from tasks.apiview import TaskViewSet, HistoryViewSet
+from tasks.views import *
 
+from rest_framework_nested import routers
+router = routers.SimpleRouter()
+
+router.register("api/task", TaskViewSet)
+
+task_router = routers.NestedSimpleRouter(router, "api/task", lookup="task")
+task_router.register("history", HistoryViewSet)
+
+# router = routers.SimpleRouter()
+# router.register("api/task", TaskViewSet)
+# router.register("api/history", HistoryViewSet)
 
 urlpatterns = [
+
+    # ADMIN
     path("admin/", admin.site.urls),
-]
+    # path("historyapi/", HistoryListApi.as_view()),
+    # path("taskapi/", TaskListApi.as_view()),
+
+    # AUTH
+    path("user/signup/", UserCreateView.as_view()),
+    path("user/login/", UserLoginView.as_view()),
+    path("user/logout/", LogoutView.as_view()),
+
+    # TASKS
+    path("tasks/", PendingTaskView.as_view()),
+    path("add-task/", AddTaskView.as_view()),
+    path("update-task/<pk>/", UpdateTaskView.as_view()),
+    path("delete-task/<pk>/", DeleteTaskView.as_view()),
+    path("completed-tasks/", CompletedTaskView.as_view()),
+    path("all-tasks/", AllTaskView.as_view()),
+
+    path("", PendingTaskView.as_view()),
+
+] + router.urls + task_router.urls
