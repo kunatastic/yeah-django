@@ -45,19 +45,15 @@ def addHistory(sender, instance, **kwargs):
 
 
 # REPORT MODEL
-"""
-    notify_at: Date to run the celery task
-    created_date: Timestamp of when the report was created
-    modified_date: Timestamp of when the report was last modified
-    user: User associated with the report
-    enabled: Whether the report is enabled or not
-"""
 class Report(models.Model):
     notify_at = models.DateTimeField(null=True, blank=True)
     created_date = models.DateTimeField(auto_now=True)
-    modified_date = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User , on_delete=models.CASCADE , null=True,blank=True)
-    enabled = models.BooleanField(default=False)
+
+    recurring = models.BooleanField(default=False)
+    enabled = models.BooleanField(default=False) # Whether the report is enabled or not. Also can be used as delete flag
+
 
     def __str__(self):
-        return str(self.notify_at)+" "+str(self.enabled)+" "+str(self.created_date)+" "+str(self.user)
+        return f"{self.user} {self.notify_at} {self.recurring} {self.enabled}"
+        

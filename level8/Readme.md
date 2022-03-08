@@ -24,6 +24,9 @@ to install the requirements for this project, run the following command in your 
 
 ```bash
 pip install -r requirements.txt
+
+
+sudo service redis-server start
 ```
 
 ## Submission
