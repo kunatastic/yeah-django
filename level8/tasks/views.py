@@ -4,13 +4,12 @@
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
-from django.forms import (BooleanField, CharField, CheckboxInput, ChoiceField, IntegerField,
-                          ModelForm, NumberInput, Textarea, TextInput,
-                          ValidationError)
+from django import forms
 from django.http import HttpResponseRedirect
 from django.views import View
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
+from tasks.models import Report
 
 from tasks.models import Task
 from tasks.cascade import cascade_logic
@@ -76,20 +75,20 @@ class UserLoginView(LoginView):
 '''
 
 # Task create form
-class TaskCreationForm(ModelForm):
+class TaskCreationForm(forms.ModelForm):
 
     common_style = 'bg-slate-100 my-2 w-full px-4 py-2 rounded-lg text-gray-900'
 
     # https://stackoverflow.com/questions/20986798/django-modelform-label-customization
-    title = CharField(widget=TextInput(attrs={'class': common_style, 'placeholder': 'Title'}))
-    description = CharField(widget=Textarea(attrs={'class': common_style, 'placeholder': 'Description'}))
-    priority = IntegerField(widget=NumberInput(attrs={'class': common_style, 'placeholder': 'Priority'}))
-    completed = BooleanField(widget=CheckboxInput(attrs={'class': common_style + 'form-checkbox h-4 w-4'}), required=False)
+    title = forms.CharField(widget=forms.TextInput(attrs={'class': common_style, 'placeholder': 'Title'}))
+    description = forms.CharField(widget=forms.Textarea(attrs={'class': common_style, 'placeholder': 'Description'}))
+    priority = forms.IntegerField(widget=forms.NumberInput(attrs={'class': common_style, 'placeholder': 'Priority'}))
+    completed = forms.BooleanField(widget=forms.CheckboxInput(attrs={'class': common_style + 'form-checkbox h-4 w-4'}), required=False)
     
     def clean_priority(self):
         priority = self.cleaned_data['priority']
         if priority < 0:
-            raise ValidationError("Priority must be greater than 0")
+            raise forms.ValidationError("Priority must be greater than 0")
         return priority
     
     class Meta:
@@ -193,3 +192,38 @@ class PendingTaskView(LoginRequiredMixin,GenericContextUtility):
     context_object_name = 'tasks'
     def get_queryset(self):
         return Task.objects.filter(deleted = False, user = self.request.user, completed = False).order_by("priority")  
+
+
+"""
+    @url: /reminder/
+    public: False
+"""
+
+class EmailReminderForm(forms.ModelForm):
+
+    common_style = 'bg-slate-100 my-2 w-full px-4 py-2 rounded-lg text-gray-900'
+
+    notify_at = forms.DateTimeField(
+        widget=forms.DateTimeInput(attrs={'class': common_style, 'placeholder': 'Notify at', 'type': 'datetime-local'})
+    )
+    recurring = forms.BooleanField(
+        widget=forms.CheckboxInput(attrs={'class': common_style + 'form-checkbox h-4 w-4'}), required=False
+    )
+    enabled = forms.BooleanField(
+        widget=forms.CheckboxInput(attrs={'class': common_style + 'form-checkbox h-4 w-4'}), required=False
+    )
+
+    class Meta:
+        model = Report
+        fields = ('notify_at','recurring', 'enabled')
+
+    
+
+class EmailReminderView(LoginRequiredMixin, UpdateView):
+    template_name = "tasks/reminder.html"
+    form_class = EmailReminderForm
+    success_url = '/tasks/'
+    model = Report
+
+    def get_queryset(self):
+        return  Report.objects.filter(user = self.request.user)

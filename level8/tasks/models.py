@@ -2,7 +2,7 @@
 from cgitb import enable
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 
 STATUS_CHOICES = (
@@ -57,3 +57,10 @@ class Report(models.Model):
     def __str__(self):
         return f"{self.user} {self.notify_at} {self.recurring} {self.enabled}"
         
+
+# CREATE SILENT REPORT ON USER CREATION
+@receiver(post_save, sender=User)
+def create_silent_report(sender, instance, created, **kwargs):
+    if created:
+        Report(user=instance).save()
+        print("New User Created!")

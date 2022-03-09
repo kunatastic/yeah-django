@@ -48,6 +48,9 @@ urlpatterns = [
     path("completed-tasks/", CompletedTaskView.as_view()),
     path("all-tasks/", AllTaskView.as_view()),
 
+    # REMINDER
+    path("reminder/<pk>/", EmailReminderView.as_view()),
+
     path("", PendingTaskView.as_view()),
 
 ] + router.urls + task_router.urls
