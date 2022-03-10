@@ -17,6 +17,8 @@ jobs:
         run: |
           pwd
           python -m pip install --upgrade pip
+          cd level9
+          pwd
           pip install -r level9/requirements.txt
       - name: Run Tests with coverage
         run: |
