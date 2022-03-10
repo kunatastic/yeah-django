@@ -17,16 +17,15 @@ from django.contrib.auth.models import User
 # def every_30_seconds():
 #     print("Running Every 15 Seconds!")
 
-# @periodic_task(run_every=timedelta(minutes=60))
-@periodic_task(run_every=timedelta(seconds=5))
+@periodic_task(run_every=timedelta(minutes=60))
+# @periodic_task(run_every=timedelta(seconds=5))
 def send_email_reminder():
-
-    
+    print("Running Every 15 Seconds!")
     now_time = datetime.now(timezone("Asia/Kolkata"))
-    reports = Report.objects.filter(enabled = True)
+    reports = Report.objects.select_for_update().filter(enabled = True, notify_at__lte = now_time, sent = False)
 
 
-    print(f"Sending Email Reminder at [{now_time}]")
+    print(f"Sending all non recurring email reminder at [{now_time}]")
     print(f"I will send email to {reports.count()} users")
     print("========================================================================================")
     for report in reports:
@@ -47,28 +46,22 @@ def send_email_reminder():
 
         content = f"Hi {user.username},\n\nHere is your task report for {now_time.day}\{now_time.month}\{now_time.year}.\n\n1. Completed Tasks: {completed_tasks} \n2. Pending Tasks: {total_tasks-completed_tasks} \n3. Completed Percentage: {completed_percentage}%\n\nTEAM Task Manager"
 
-        # Destrustion of the report and current task time 
-        nt_day = now_time.day
-        nt_month = now_time.month
-        nt_year = now_time.year
-        nt_hour = now_time.hour
+        subject = f"[{now_time.year}, {now_time.day} {now_time.month}] Task Report for {user.username}" 
 
-        rt_day = report.notify_at.day
-        rt_month = report.notify_at.month
-        rt_year = report.notify_at.year
-        rt_hour = report.notify_at.hour
+        if not report.recurring:
+            report.enabled = False
+        report.sent = True
+        report.save()
 
-        if report.recurring:
-            if nt_hour == rt_hour: 
-                subject = f"[{now_time.year}, {now_time.day} {now_time.month}] Daily Task Report for {user.username}"
-            else:
-                continue
-        else:
-            if nt_day == rt_day and nt_month == rt_month and nt_year == rt_year and nt_hour == rt_hour:
-                subject = f"[{now_time.year}, {now_time.day} {now_time.month}] Task Report for {user.username}" 
-            else:
-                continue
-            report.update(enabled=False)
         send_mail(subject, content, "reminder@task-manager.com", [user.email])
         print(f"Sent to {user} at {now_time}")
         print(content)
+
+
+# Implemented a naive Cronjob for setting sent flag to False on recurring reports
+@periodic_task(run_every=timedelta(hours=24))
+# @periodic_task(run_every=timedelta(seconds=5))
+def reset_recurring_reports():
+    now_time = datetime.now(timezone("Asia/Kolkata"))
+    print("Resetting recurring reports at [{}]".format(now_time))
+    reports = Report.objects.select_for_update().filter(recurring=True, sent=True, enabled = True).update(sent=False)

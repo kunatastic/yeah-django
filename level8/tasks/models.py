@@ -50,6 +50,7 @@ class Report(models.Model):
     created_date = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User , on_delete=models.CASCADE , null=True,blank=True)
 
+    sent = models.BooleanField(default=False)
     recurring = models.BooleanField(default=False)
     enabled = models.BooleanField(default=False) # Whether the report is enabled or not. Also can be used as delete flag
 
