@@ -21,7 +21,7 @@ jobs:
           pip install -r level9/requirements.txt
       - name: Run Tests with coverage
         run: |
-          coverage run manage.py test
+          coverage run level9/manage.py test
       - name: coverage report
         run: |
           coverage report
