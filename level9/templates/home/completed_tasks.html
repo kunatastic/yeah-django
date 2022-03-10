@@ -1,0 +1,8 @@
+{% extends "home/home_template.html" %} {% block title %} Completed Tasks | View all the completed
+tasks {% endblock title%} {% block links %}
+<div class="m-4">
+  <a class="hover:text-red-500 hover:bg-red-100 px-4 py-1 rounded-full" href="/all-tasks">All</a>
+  <a class="hover:text-red-500 hover:bg-red-100 px-4 py-1 rounded-full" href="/tasks">Pending</a>
+  <a class="text-red-500 bg-red-100 px-4 py-1 rounded-full" href="/completed-tasks">Completed</a>
+</div>
+{% endblock links %}

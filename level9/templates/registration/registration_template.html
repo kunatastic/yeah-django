@@ -1,0 +1,25 @@
+{% extends 'template.html' %}
+<!--  -->
+{% block content %}
+<h2 class="my-16 text-center text-5xl font-extrabold text-gray-900">Task Manager</h2>
+<h3 class="my-5 text-2xl font-extrabold text-gray-700">{% block text_1 %}{% endblock text_1 %}</h3>
+<form class="mt-8 space-y-6" action="" method="POST">
+  {% csrf_token %} {% for field in form %}
+  <div>
+    <h2>{{ field.label }}</h2>
+    {{ field.errors }} {{field}} {% if field.help_text %}
+    <p class="help">{{ field.help_text|safe }}</p>
+    {% endif %}
+  </div>
+  {% endfor %}
+
+  <div>
+    <button
+      type="submit"
+      class="group relative w-full flex justify-center py-3 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+    >
+      {% block text_2 %}{% endblock text_2 %}
+    </button>
+  </div>
+</form>
+{% endblock content %}
