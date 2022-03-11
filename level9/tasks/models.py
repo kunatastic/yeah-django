@@ -32,7 +32,7 @@ class History(models.Model):
     created_date = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return self.task.title + " " + self.status_previous + " " + self.status_current + " " + str(self.created_date)
+        return self.task.title + " " + self.status_previous + " " + self.status_current
 
 # https://medium.com/@singhgautam7/django-signals-master-pre-save-and-post-save-422889b2839
 @receiver(pre_save, sender=Task)

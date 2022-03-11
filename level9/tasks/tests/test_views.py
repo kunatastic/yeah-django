@@ -226,51 +226,51 @@ class ViewTestCase(TestCase):
     #     self.assertEqual(response.status_code, status.HTTP_200_OK)
     #     self.assertEqual(response.url, "/tasks/")
 
-# class ModelsTestCase(TestCase):
-#     def setUp(self):
-#         self.factory = RequestFactory()
-#         self.user = User.objects.create(username="Kunal", email="kunal@task-manager.org")
-#         self.user.set_password("SafePasword123")
-#         self.user.save()
+class ModelsTestCase(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create(username="Kunal", email="kunal@task-manager.org")
+        self.user.set_password("SafePasword123")
+        self.user.save()
     
-#     def test_models_tasks(self):
-#         Task(
-#             title="Car wash",
-#             description="Wash the car",
-#             priority=56,
-#             completed=False,
-#             status=STATUS_CHOICES[0][0],
-#         ).save()
-#         self.assertEqual(Task.objects.count(), 1)
-#         self.assertEqual(str(Task.objects.get(priority=56)),"Car wash 56 False")
+    def test_models_tasks(self):
+        Task(
+            title="Car wash",
+            description="Wash the car",
+            priority=56,
+            completed=False,
+            status=STATUS_CHOICES[0][0],
+        ).save()
+        self.assertEqual(Task.objects.count(), 1)
+        self.assertEqual(str(Task.objects.get(priority=56)),"Car wash 56 False")
 
-#     def test_models_history(self):
-#         Task(
-#             title="Car wash",
-#             description="Wash the car",
-#             priority=56,
-#             completed=False,
-#             status=STATUS_CHOICES[0][0],
-#         ).save()
+    def test_models_history(self):
+        Task(
+            title="Car wash",
+            description="Wash the car",
+            priority=56,
+            completed=False,
+            status=STATUS_CHOICES[0][0],
+        ).save()
 
-#         History(
-#             task=Task.objects.get(priority=56),
-#             status_previous = STATUS_CHOICES[0][0],
-#             status_current = STATUS_CHOICES[1][0],
-#         ).save()
+        History(
+            task=Task.objects.get(priority=56),
+            status_previous = STATUS_CHOICES[0][0],
+            status_current = STATUS_CHOICES[1][0],
+        ).save()
 
-#         self.assertEqual(History.objects.count(), 1)
-#         self.assertEqual(str(History.objects.get(task=Task.objects.get(priority=56))), "Car wash PENDING IN_PROGRESS")
+        self.assertEqual(History.objects.count(), 1)
+        self.assertEqual(str(History.objects.get(task=Task.objects.get(priority=56))), "Car wash PENDING IN_PROGRESS")
 
-#     def test_models_report(self):
-#         now_time = datetime.now(timezone("Asia/Kolkata"))
-#         report = Report(
-#             notify_at=now_time,
-#             user = self.user,
-#             recurring = True,
-#         ).save()
-#         self.assertEqual(Report.objects.count(), 2)
-#         # self.assertEqual(str(Report.objects.get(pk=report.pk)), "Kunal None False False")
+    def test_models_report(self):
+        now_time = datetime.now(timezone("Asia/Kolkata"))
+        report = Report(
+            notify_at=now_time,
+            user = self.user,
+            recurring = True,
+        ).save()
+        self.assertEqual(Report.objects.count(), 2)
+        # self.assertEqual(str(Report.objects.get(pk=report.pk)), "Kunal None False False")
 
 
 class CeleryTestCase(TestCase):
