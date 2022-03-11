@@ -213,18 +213,6 @@ class ViewTestCase(TestCase):
         except:
             self.assertFalse(False)
 
-    # def test_email_reminder_view_add_reminder(self):
-    #     report = Report.objects.filter(user=self.user).first()
-    #     request = self.factory.post(f"/reminder/{report.pk}/",
-    #         {
-    #             'notify_at': datetime.now(),
-    #             'recurring':True, 
-    #             'enabled':True,
-    #         })
-    #     request.user = self.user
-    #     response = EmailReminderView.as_view()(request, pk=report.pk)
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(response.url, "/tasks/")
 
 class ModelsTestCase(TestCase):
     def setUp(self):
@@ -263,17 +251,24 @@ class ModelsTestCase(TestCase):
         self.assertEqual(str(History.objects.get(task=Task.objects.get(priority=56))), "Car wash PENDING IN_PROGRESS")
 
     def test_models_report(self):
-        now_time = datetime.now(timezone("Asia/Kolkata"))
+        now_time = datetime.now()
         report = Report(
             notify_at=now_time,
             user = self.user,
             recurring = True,
-        ).save()
+        )
+        report.save()
+        print(Report.objects.get(pk=report.pk))
         self.assertEqual(Report.objects.count(), 2)
-        # self.assertEqual(str(Report.objects.get(pk=report.pk)), "Kunal None False False")
 
 
 class CeleryTestCase(TestCase):
+
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create(username="Kunal", email="kunal@task-manager.org")
+        self.user.set_password("SafePasword123")
+        self.user.save()
     
     def test_celery_task(self):
         try:
@@ -281,6 +276,31 @@ class CeleryTestCase(TestCase):
             self.assertTrue(True)
         except:
             self.assertTrue(False)
+
+    def test_celery_task_with_email_report_recurring(self):
+        report = Report.objects.filter(user=self.user).first()
+        report.notify_at = datetime.now(timezone("Asia/Kolkata"))
+        report.recurring = True
+        report.enabled = True
+        report.save()
+        try:
+            send_email_reminder()
+            self.assertTrue(True)
+        except:
+            self.assertTrue(False)
+    
+    def test_celery_task_with_email_report_not_recurring(self):
+        report = Report.objects.filter(user=self.user).first()
+        report.notify_at = datetime.now(timezone("Asia/Kolkata"))
+        report.recurring = False
+        report.enabled = True
+        report.save()
+        try:
+            send_email_reminder()
+            self.assertTrue(True)
+        except:
+            self.assertTrue(False)
+
     
     def test_reset_recurring_reports(self):
         try:
