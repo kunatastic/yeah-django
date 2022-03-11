@@ -140,22 +140,11 @@ class DeleteTaskView(LoginRequiredMixin,DeleteView):
     template_name = 'tasks/delete_task.html'
     success_url = '/tasks/'
     def form_valid(self, form):
-        self.object.update(deleted=True)
+        self.object.deleted = True
+        self.object.save()
         return HttpResponseRedirect(self.get_success_url())
     def get_queryset(self) :
         return Task.objects.filter(user=self.request.user, deleted=False)
-
-
-# LIST THE COMPLETED TASK
-'''
-    @url: /completed-tasks/
-    public: False
-'''
-class CompletedTaskView(LoginRequiredMixin,ListView):
-    template_name = 'completed_tasks.html'
-    context_object_name = 'completed'
-    def get_queryset(self):
-        return Task.objects.filter(deleted = False, completed = True).order_by("priority")
 
 
 # LIST ALL TASKS
@@ -226,4 +215,4 @@ class EmailReminderView(LoginRequiredMixin, UpdateView):
     model = Report
 
     def get_queryset(self):
-        return  Report.objects.filter(user = self.request.user)
+        return Report.objects.filter(user = self.request.user, pk=self.kwargs.get("pk"))
